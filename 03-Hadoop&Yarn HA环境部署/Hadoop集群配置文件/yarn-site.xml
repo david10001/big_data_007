@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+	<!-- nodemanager 配置 ================================================= -->
+	<property>
+		<name>yarn.nodemanager.aux-services</name>
+		<value>mapreduce_shuffle</value>
+	</property>
+	<property>
+		<name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
+		<value>org.apache.hadoop.mapred.ShuffleHandler</value>
+	</property>
+	<property>
+		<name>yarn.nodemanager.localizer.address</name>
+		<value>0.0.0.0:23344</value>
+		<description>Address where the localizer IPC is.</description>
+	</property>
+	<property>
+		<name>yarn.nodemanager.webapp.address</name>
+		<value>0.0.0.0:23999</value>
+		<description>NM Webapp address.</description>
+	</property>
+
+	<!-- HA 配置 =============================================================== -->
+	<!-- Resource Manager Configs -->
+	<property>
+		<name>yarn.resourcemanager.connect.retry-interval.ms</name>
+		<value>2000</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.ha.enabled</name>
+		<value>true</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.ha.automatic-failover.enabled</name>
+		<value>true</value>
+	</property>
+	<!-- 使嵌入式自动故障转移。HA环境启动，与 ZKRMStateStore 配合 处理fencing -->
+	<property>
+		<name>yarn.resourcemanager.ha.automatic-failover.embedded</name>
+		<value>true</value>
+	</property>
+	<!-- 集群名称，确保HA选举时对应的集群 -->
+	<property>
+		<name>yarn.resourcemanager.cluster-id</name>
+		<value>yarn-cluster</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.ha.rm-ids</name>
+		<value>rm1,rm2</value>
+	</property>
+
+
+    <!--这里RM主备结点需要单独指定,（可选）
+	<property>
+		 <name>yarn.resourcemanager.ha.id</name>
+		 <value>rm2</value>
+	 </property>
+	 -->
+
+	<property>
+		<name>yarn.resourcemanager.scheduler.class</name>
+		<value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.recovery.enabled</name>
+		<value>true</value>
+	</property>
+	<property>
+		<name>yarn.app.mapreduce.am.scheduler.connection.wait.interval-ms</name>
+		<value>5000</value>
+	</property>
+	<!-- ZKRMStateStore 配置 -->
+	<property>
+		<name>yarn.resourcemanager.store.class</name>
+		<value>org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.zk-address</name>
+		<value>sf001:2181,sf002:2181,sf003:2181</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.zk.state-store.address</name>
+		<value>sf001:2181,sf002:2181,sf003:2181</value>
+	</property>
+	<!-- Client访问RM的RPC地址 (applications manager interface) -->
+	<property>
+		<name>yarn.resourcemanager.address.rm1</name>
+		<value>sf001:23140</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.address.rm2</name>
+		<value>sf002:23140</value>
+	</property>
+	<!-- AM访问RM的RPC地址(scheduler interface) -->
+	<property>
+		<name>yarn.resourcemanager.scheduler.address.rm1</name>
+		<value>sf001:23130</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.scheduler.address.rm2</name>
+		<value>sf002:23130</value>
+	</property>
+	<!-- RM admin interface -->
+	<property>
+		<name>yarn.resourcemanager.admin.address.rm1</name>
+		<value>sf001:23141</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.admin.address.rm2</name>
+		<value>sf002:23141</value>
+	</property>
+	<!--NM访问RM的RPC端口 -->
+	<property>
+		<name>yarn.resourcemanager.resource-tracker.address.rm1</name>
+		<value>sf001:23125</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.resource-tracker.address.rm2</name>
+		<value>sf002:23125</value>
+	</property>
+	<!-- RM web application 地址 -->
+	<property>
+		<name>yarn.resourcemanager.webapp.address.rm1</name>
+		<value>sf001:8088</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.webapp.address.rm2</name>
+		<value>sf002:8088</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.webapp.https.address.rm1</name>
+		<value>sf001:23189</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.webapp.https.address.rm2</name>
+		<value>sf002:23189</value>
+	</property>
+
+
+
+	<property>
+	   <name>yarn.log-aggregation-enable</name>
+	   <value>true</value>
+	</property>
+	<property>
+		 <name>yarn.log.server.url</name>
+		 <value>http://sf001:19888/jobhistory/logs</value>
+	</property>
+
+
+	<property>
+		<name>yarn.nodemanager.resource.memory-mb</name>
+		<value>2048</value>
+	</property>
+	<property>
+		<name>yarn.scheduler.minimum-allocation-mb</name>
+		<value>1024</value>
+		<discription>单个任务可申请最少内存，默认1024MB</discription>
+	 </property>
+
+  
+  <property>
+	<name>yarn.scheduler.maximum-allocation-mb</name>
+	<value>2048</value>
+	<discription>单个任务可申请最大内存，默认8192MB</discription>
+  </property>
+
+   <property>
+       <name>yarn.nodemanager.resource.cpu-vcores</name>
+       <value>2</value>
+    </property>
+
+</configuration>
+

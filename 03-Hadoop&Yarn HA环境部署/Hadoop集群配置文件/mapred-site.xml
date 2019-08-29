@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+	<!-- 配置 MapReduce Applications -->
+	<property>
+		<name>mapreduce.framework.name</name>
+		<value>yarn</value>
+	</property>
+	<!-- JobHistory Server ============================================================== -->
+	<!-- 配置 MapReduce JobHistory Server 地址 ，默认端口10020 -->
+	<property>
+		<name>mapreduce.jobhistory.address</name>
+		<value>ruozedata001:10020</value>
+	</property>
+	<!-- 配置 MapReduce JobHistory Server web ui 地址， 默认端口19888 -->
+	<property>
+		<name>mapreduce.jobhistory.webapp.address</name>
+		<value>ruozedata001:19888</value>
+	</property>
+
+<!-- 配置 Map段输出的压缩,snappy-->
+  <property>
+      <name>mapreduce.map.output.compress</name> 
+      <value>true</value>
+  </property>
+              
+  <property>
+      <name>mapreduce.map.output.compress.codec</name> 
+      <value>org.apache.hadoop.io.compress.SnappyCodec</value>
+   </property>
+
+</configuration>

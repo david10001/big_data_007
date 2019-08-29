@@ -1,0 +1,85 @@
+1.3台机器执行
+[root@hadoop001 ~]# ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa): 
+Created directory '/root/.ssh'.
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+The key fingerprint is:
+74:78:50:05:7e:c8:bb:2a:f1:45:c4:0a:9c:38:90:dc root@hadoop001
+The key's randomart image is:
++--[ RSA 2048]----+
+| ..+ o ..ooo.    |
+|  o E +  =o.     |
+|     . .oo* .    |
+|       ..o.o     |
+|        S..      |
+|      .   ..     |
+|       o ..      |
+|      . ..       |
+|       ..        |
++-----------------+
+[root@hadoop001 ~]# cat /root/.ssh/id_rsa.pub>> /root/.ssh/authorized_keys
+
+2.hadoop002 hadoop003传输id_rsa.pub文件到hadoop001
+[root@hadoop002 ~]# cd .ssh
+[root@hadoop002 .ssh]# ll
+total 12
+-rw-r--r--. 1 root root  396 Sep  2 21:37 authorized_keys
+-rw-------. 1 root root 1675 Sep  2 21:37 id_rsa
+-rw-r--r--. 1 root root  396 Sep  2 21:37 id_rsa.pub
+[root@hadoop002 .ssh]# scp id_rsa.pub 192.168.137.130:/root/.ssh/id_rsa.pub2
+root@192.168.137.130's password: 
+id_rsa.pub                                                                                                      100%  396     0.4KB/s   00:00    
+[root@hadoop002 .ssh]# 
+
+[root@hadoop003 ~]# cd .ssh
+[root@hadoop003 .ssh]# ll
+total 12
+-rw-r--r--. 1 root root  396 Sep  2 21:37 authorized_keys
+-rw-------. 1 root root 1675 Sep  2 21:37 id_rsa
+-rw-r--r--. 1 root root  396 Sep  2 21:37 id_rsa.pub
+[root@hadoop003 .ssh]# scp id_rsa.pub 192.168.137.130:/root/.ssh/id_rsa.pub3
+root@192.168.137.130's password: 
+id_rsa.pub                                                                                                      100%  396     0.4KB/s   00:00    
+[root@hadoop003 .ssh]# 
+
+3.hadoop001机器 合并id_rsa.pub2、id_rsa.pub3到authorized_keys
+[root@hadoop001 ~]# cd .ssh
+[root@hadoop001 .ssh]# ll
+total 20
+-rw-r--r--. 1 root root  396 Sep  2 21:37 authorized_keys
+-rw-------. 1 root root 1675 Sep  2 21:37 id_rsa
+-rw-r--r--. 1 root root  396 Sep  2 21:37 id_rsa.pub
+-rw-r--r--. 1 root root  396 Sep  2 21:42 id_rsa.pub2
+-rw-r--r--. 1 root root  396 Sep  2 21:42 id_rsa.pub3
+[root@hadoop001 .ssh]# cat id_rsa.pub2 >> authorized_keys
+[root@hadoop001 .ssh]# cat id_rsa.pub3 >> authorized_keys
+[root@hadoop001 .ssh]# cat  authorized_keys
+ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA2dWIp5gGKuTkH7v0hj6IdldGkK0liMEzwXNnBD1iV9e0T12D2W9B4GnkMkCR3EZCKwfK593KPAr2cC3YADyMPaJn9x83pqOStvOBVUEEUYr9N/RUvkDq+JhmlGiTutSsqYNlu9LpCwNMWc+doANzwoM8xpyVVpl1l4LJdc0ShA8UCl2rJYMJgSal49weD58iSNMHB4tEEbAWzojbdkjfsFgtZTRsbckdV0gzDdW/9FoWYWlhqA4aw/SkxglssJ8B8XLSPZX45IdwhD65sTJUCQWkZYSiEq2MQOVLdB517KY4m0bHPid7NhM20g7oYL3H6271EQJ9tat7sFnpbuYdew== root@hadoop001
+ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAx+tMmk4tEQon/VZZMkfpmPkHGZ7IJg3wyLMpddAGcluWiT0ldzCBZIBY/qkPzwg9TukIuFQ4uqV9R14xLQjdkte2QKRTpp1NLfmVBkCb6Q/ucOlayrU1mXXXiHqbRhPNLK/7++fL+5iMbqzjyM35OuOAVwX+G8rQ7ALx6AgVOnM1bscI5xM4bpKX/uzDQ6Mo9YAalvrC0PF/jlUvyE9lEDIwGwLtxR+UDkhWSw6ucbAt8LxHXhVabg4mpPBA5M1vKujxDJBXK58QcLlUxy+b3gVTI7Ojrurw7KjHLynC439B8NXY9dcWyztIu3tPtopPg8/N3w/5VrifsQIvnpDEcw== root@hadoop002
+ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAqIZyHmKtxOarZyIcuYU0phVQUAHRvsB4jFffuW3X5G7+7RLApv3KsTNe0niTp6TH6B9/lENVKaZT9ut65mo5gQYIeoZqAlE0yA6NpymUkybfyS3bFS7kx2oO0pszQuOAQwFZZaGV1pdEAPWNFAwtUgsngo9x5wcVPdpSgpnVo/gU6smdbaAK2RWQOpZ8qoBmW5eMxEYuihRVetYlJ+erWxboAVW0O2tvdFBChejY7mt0BRIksahNqUhvQvoYRZbMOKiuBRpgxohI/Fz/FOKNYcRwzEHpZKrijttf62rxRt+YfuVETsZrXvWINPTzp9Dbw8qtt/kBvBFgSZYeWP8IDQ== root@hadoop003
+
+
+4.将authorized_keys分发到hadoop002、hadoop003机器
+[root@hadoop001 .ssh]# scp authorized_keys 192.168.137.131:/root/.ssh/
+The authenticity of host '192.168.137.131 (192.168.137.131)' can't be established.
+RSA key fingerprint is 76:c7:31:b6:20:56:4b:3e:29:c1:99:9f:fb:c0:9e:b8.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '192.168.137.131' (RSA) to the list of known hosts.
+root@192.168.137.131's password: 
+authorized_keys                                                                                                 100% 1188     1.2KB/s   00:00    
+[root@hadoop001 .ssh]# scp authorized_keys 192.168.137.132:/root/.ssh/
+The authenticity of host '192.168.137.132 (192.168.137.132)' can't be established.
+RSA key fingerprint is 09:f6:4a:f1:a0:bd:79:fd:34:e7:75:94:0b:3c:83:5a.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '192.168.137.132' (RSA) to the list of known hosts.
+root@192.168.137.132's password: 
+authorized_keys         
+
+5.验证(每台机器上执行下面3条命令,只输入yes,不输入密码,则这3台互相通信了)
+ssh root@hadoop001 date
+ssh root@hadoop002 date
+ssh root@hadoop003 date
